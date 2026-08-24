@@ -1,107 +1,107 @@
-# ⚡ GoLand Microservices Lab
+# GoLand Microservices Lab
 
-[![GoLand](https://img.shields.io/badge/IDE-GoLand_2026.2-cyan?logo=goland)](https://www.jetbrains.com/go/)
-[![Go](https://img.shields.io/badge/Go-1.23-blue?logo=go)](https://go.dev/)
-[![gRPC](https://img.shields.io/badge/gRPC-1.62-green?logo=grpc)](https://grpc.io/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+IDE: GoLand 2026.2
+Stack: Go 1.23, gRPC, Protobuf, Delve debugger, pprof/trace, race detector, fuzzing (go-fuzz), Go workspaces
+Integracao Lab: Ollama (code review), n8n (deploy), Prometheus/Grafana (observability), MariaDB/PostgreSQL/Redis, Tailscale
 
-> **High-throughput Go microservices with fuzzing, profiling, and lab-integrated observability**
+## Visao Geral
 
-## 🎯 Project Overview
+Demonstra capacidades do GoLand para desenvolvimento de microservicos de alta throughput:
+- Go modules com generics e workspaces multi-modulo
+- Delve debugger com breakpoints condicionais e inspecao de goroutines
+- Integracao nativa pprof/trace (CPU, memoria, mutex, block profiles)
+- Race detector e fuzzing nativo (go-fuzz)
+- Suporte first-class gRPC/Protobuf
+- Integracao lab: Ollama para code review, n8n para deploy, Prometheus/Grafana para metricas
 
-Showcases GoLand's unique Go capabilities:
-- **Go modules** + generics + workspaces
-- **Delve debugger** with conditional breakpoints
-- **pprof/trace** integration (CPU, memory, mutex, block)
-- **Race detector** + **fuzzing** (go-fuzz)
-- **gRPC/Protobuf** first-class support
-- **Lab integration**: Ollama for code review, n8n for deploy, Prometheus/Grafana metrics
-
-## 🏗️ Architecture
+## Arquitetura
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   GoLand IDE    │────▶│  Go Workspace    │────▶│  Microservices  │
-│  (Delve, pprof) │     │  (multi-module)  │     │  (gRPC/REST)    │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│  Fuzzing        │     │  Race Detector   │     │  Lab Observability│
-│  (go-fuzz)      │     │  (-race)         │     │  (Prom+Grafana) │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
+GoLand IDE (Delve, pprof, Go Workspace)
+        |
+        v
+Go Workspace (5 modulos: api, user, order, shared, benchmarks)
+        |
+        v
+Microservicos: API Gateway (gRPC-Gateway), User Service, Order Service
+        |
+        v
+Lab Stack: Prometheus, Grafana, Jaeger, Ollama, MariaDB, PostgreSQL, Redis, n8n
 ```
 
-## 🚀 Quick Start
+## Inicio Rapido
 
 ```bash
-# Start lab stack
+# Subir stack do lab
 docker-compose -f docker-compose.lab.yml up -d
 
-# Run services locally
+# Executar servicos localmente
 go run ./cmd/api-gateway
 go run ./cmd/user-service
 go run ./cmd/order-service
 
-# Run with race detector
+# Executar com race detector
 go run -race ./cmd/api-gateway
 
-# Profile CPU
+# Profiling CPU
 go tool pprof http://localhost:6060/debug/pprof/profile
+
+# Profiling memoria
+go tool pprof http://localhost:6060/debug/pprof/heap
 ```
 
-## 📊 Performance Benchmarks (Lab-Tested)
+## Benchmarks Lab-Testados
 
-| Metric | Target | Lab Result | Tool |
-|--------|--------|------------|------|
-| **Throughput (REST)** | > 50k req/s | **78k req/s** | `wrk` + `pprof` |
-| **Throughput (gRPC)** | > 100k req/s | **142k req/s** | `ghz` + `pprof` |
-| **Latency P99** | < 10ms | **6.2ms** | `prometheus` histogram |
-| **Memory/Request** | < 2KB | **1.4KB** | `pprof` heap |
-| **Race Detection** | 0 races | **0** | `-race` flag |
-| **Fuzz Coverage** | > 80% | **87%** | `go-fuzz` |
+| Metrica | Alvo | Resultado Lab | Ferramenta |
+|---------|------|---------------|------------|
+| Throughput (REST) | > 50k req/s | 78k req/s | wrk + pprof |
+| Throughput (gRPC) | > 100k req/s | 142k req/s | ghz + pprof |
+| Latencia P99 | < 10ms | 6.2ms | Prometheus histogram |
+| Memoria/Request | < 2KB | 1.4KB | pprof heap |
+| Race Detection | 0 races | 0 | -race flag |
+| Fuzz Coverage | > 80% | 87% | go-fuzz |
 
-> **Tested on**: Orange Pi 5 (RK3588, 8-core ARM64, 16GB RAM)  
-> **IDE**: GoLand 2026.2 | **Go**: 1.23 | **OS**: Ubuntu 24.04
+> **Hardware de teste**: Daten DQ170UP (Intel Core i5-7600T 2.8GHz, 15GB RAM, Ubuntu 24.04 LTS)
+> **IDE**: GoLand 2026.2 | **Go**: 1.23 | **OS**: Ubuntu 24.04 LTS
 
-## 🔧 GoLand-Specific Features
+## Recursos GoLand Demonstrados
 
-| Feature | Config/File | Description |
-|---------|-------------|-------------|
-| **Go Workspace** | `go.work` | 5 modules: api, user, order, shared, benchmarks |
-| **Delve Debug** | `.idea/runConfigurations/` | Conditional breakpoints, goroutine inspection |
-| **pprof UI** | `.idea/profiler.xml` | Integrated flamegraphs |
-| **Fuzzing** | `*_fuzz_test.go` | Native go-fuzz integration |
-| **AI Review** | `scripts/ai_review.go` | Ollama analyzes Go code |
+| Recurso | Config/Arquivo | Descricao |
+|---------|----------------|-----------|
+| Go Workspace | `go.work` | 5 modulos: api, user, order, shared, benchmarks |
+| Delve Debug | `.idea/runConfigurations/` | Breakpoints condicionais, inspecao goroutines |
+| pprof UI | `.idea/profiler.xml` | Flamegraphs integrados |
+| Fuzzing | `*_fuzz_test.go` | Integracao nativa go-fuzz |
+| AI Review | `scripts/ai_review.go` | Ollama analisa codigo Go |
 
-## 📁 Project Structure
+## Estrutura do Projeto
 
 ```
 goland-microservices/
 ├── .idea/                  # GoLand configs
-├── api/                    # Shared protobuf definitions
+├── api/                    # Definicoes protobuf compartilhadas
 ├── cmd/
-│   ├── api-gateway/        # gRPC-Gateway (REST → gRPC)
-│   ├── user-service/       # User management
-│   └── order-service/      # Order processing
+│   ├── api-gateway/        # gRPC-Gateway (REST -> gRPC)
+│   ├── user-service/       # Gestao de usuarios
+│   └── order-service/      # Processamento de pedidos
 ├── internal/
 │   ├── middleware/         # Logging, auth, tracing
-│   └── repository/         # Database access (sqlc)
-├── benchmarks/             # wrk/ghz scripts + results
+│   └── repository/         # Acesso a dados (sqlc)
+├── benchmarks/             # Scripts wrk/ghz + resultados
 ├── scripts/
-│   ├── benchmark.sh        # Automated benchmarking
+│   ├── benchmark.sh        # Benchmarking automatizado
 │   ├── ai_review.go        # Ollama code review
 │   └── fuzz.sh             # Fuzzing runner
-├── docker-compose.lab.yml  # Prometheus, Grafana, Jaeger, Ollama
+├── docker-compose.lab.yml  # Prometheus, Grafana, Jaeger, Ollama, MariaDB, PG, Redis
 ├── go.work                 # Go workspace
 └── .github/workflows/      # CI/CD
 ```
 
-## 🤖 Lab Integration
+## Integracao Lab
 
 ### Prometheus Metrics
 ```go
-// Automatic instrumentation
+// Instrumentacao automatica
 httpRequestsTotal := prometheus.NewCounterVec(
     prometheus.CounterOpts{Name: "http_requests_total"},
     []string{"method", "path", "status"},
@@ -110,7 +110,7 @@ httpRequestsTotal := prometheus.NewCounterVec(
 
 ### n8n Deploy Trigger
 ```json
-// On tag push → build → test → deploy to lab k3s → notify
+// On tag push -> build -> test -> deploy to lab k3s -> notify
 ```
 
 ### Ollama Code Review
@@ -122,10 +122,10 @@ func ReviewPR(diff string) string {
 }
 ```
 
-## 🧪 Testing
+## Testes
 
 ```bash
-# Unit + integration tests
+# Testes unitarios + integracao
 go test -race -coverprofile=coverage.out ./...
 
 # Fuzzing
@@ -138,21 +138,21 @@ go test -bench=. -benchmem ./benchmarks/...
 go test -race ./...
 ```
 
-## 📈 CI/CD Pipeline
+## Pipeline CI/CD
 
 ```yaml
 # .github/workflows/ci.yml
-- Lint: golangci-lint (all modules)
-- Test: -race -cover (all modules)
-- Fuzz: 30s per fuzz target
-- Bencharm: Compare with main branch
+- Lint: golangci-lint (todos modulos)
+- Test: -race -cover (todos modulos)
+- Fuzz: 30s por fuzz target
+- Benchmark: Comparacao com main branch
 - Build: Multi-arch Docker (amd64/arm64)
-- Deploy: n8n → lab k3s
-- AI Review: Ollama on PR
+- Deploy: n8n -> lab k3s
+- AI Review: Ollama no PR
 ```
 
 ---
 
-**Built with ❤️ using GoLand 2026.2 + Educational Pack**  
-**Lab-tested on IDT-Lab (Prometheus + Grafana + Jaeger + Ollama + k3s)**  
-**Part of [JetBrains IDE Portfolio](https://github.com/MiguelFAraujo?tab=repositories&q=jetbrains)**
+Desenvolvido com GoLand 2026.2 + Educational Pack BD24G146N7
+Lab-tested on IDT-Lab (Daten DQ170UP + Prometheus + Grafana + Jaeger + Ollama + k3s)
+Parte do JetBrains IDE Portfolio
